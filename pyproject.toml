@@ -1,0 +1,17 @@
+[project]
+name = "tc500a-control"
+version = "0.1.0"
+description = "Simple interface to control one or more Honeywell TC500A thermostats."
+readme = "README.md"
+authors = [
+    { name = "wyatt-townsend", email = "172126617+wyatt-townsend@users.noreply.github.com" },
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+tc500a-control = "tc500a_control:main"
+
+[build-system]
+requires = ["uv_build>=0.12.18,<0.13.0"]
+build-backend = "uv_build"
