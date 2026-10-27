@@ -7,7 +7,7 @@ authors = [
     { name = "wyatt-townsend", email = "172126617+wyatt-townsend@users.noreply.github.com" },
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["bacpypes3>=0.0.110", "fastapi[standard]>=0.162.0"]
 
 [project.scripts]
 tc500a-control = "tc500a_control:main"
@@ -15,3 +15,9 @@ tc500a-control = "tc500a_control:main"
 [build-system]
 requires = ["uv_build>=0.12.18,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["ruff>=0.17.3"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
