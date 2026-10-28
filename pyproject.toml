@@ -7,7 +7,12 @@ authors = [
     { name = "wyatt-townsend", email = "172126617+wyatt-townsend@users.noreply.github.com" },
 ]
 requires-python = ">=3.13"
-dependencies = ["bacpypes3>=0.0.110", "fastapi[standard]>=0.162.0"]
+dependencies = [
+    "bacpypes3>=0.0.110",
+    "fastapi[standard]>=0.162.0",
+    "pydantic>=2.14.1",
+    "pydantic-settings>=2.16.1",
+]
 
 [project.scripts]
 tc500a-control = "tc500a_control:main"

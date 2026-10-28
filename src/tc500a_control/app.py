@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI, Request
 
+from tc500a_control.schema import WeeklySchedule
 from tc500a_control.thermostat import THERMOSTAT, TC500AThermostat, create_bacnet_client
 
 
@@ -43,9 +44,15 @@ async def read_occupancy(request: Request):
 
 
 @api.get("/schedule")
-async def read_schedule(request: Request):
+async def read_schedule(request: Request) -> WeeklySchedule:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
     return await thermostat.get_weekly_schedule()
+
+
+@api.put("/schedule")
+async def write_schedule(request: Request, schedule: WeeklySchedule) -> None:
+    thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
+    await thermostat.set_weekly_schedule(schedule)
 
 
 app.include_router(api)
