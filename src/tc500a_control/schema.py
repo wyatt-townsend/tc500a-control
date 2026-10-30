@@ -18,7 +18,6 @@ class OccupancyState(IntEnum):
     OCCUPIED = 0
     UNOCCUPIED = 1
     STANDBY = 3
-    UNKNOWN = 255
 
 
 class Transition(BaseModel):
