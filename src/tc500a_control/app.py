@@ -2,7 +2,15 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI, Request
 
-from tc500a_control.schema import OccupancyState, WeeklySchedule
+from tc500a_control.schema import (
+    HealthStatus,
+    HumidityValue,
+    OccupancyState,
+    OccupancyValue,
+    SetpointValue,
+    TemperatureValue,
+    WeeklySchedule,
+)
 from tc500a_control.thermostat import THERMOSTAT, TC500AThermostat, create_bacnet_client
 
 
@@ -23,87 +31,94 @@ api = APIRouter(prefix="/api")
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> HealthStatus:
+    return HealthStatus(status="ok")
 
 
 # Environment
 @api.get("/temperature")
-async def read_temp(request: Request):
+async def read_temp(request: Request) -> TemperatureValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    temp = await thermostat.get_temperature()
+    current = await thermostat.get_temperature()
 
-    return {"temperature": temp}
+    return TemperatureValue(temperature=current)
 
 
 @api.get("/humidity")
-async def read_humidity(request: Request):
+async def read_humidity(request: Request) -> HumidityValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    value = await thermostat.get_humidity()
+    current = await thermostat.get_humidity()
 
-    return {"humidity": value}
+    return HumidityValue(humidity=current)
 
 
 # Setpoints
-@api.get("/effective_cool_setpoint")
-async def read_effective_cool_setpoint(request: Request):
+setpoints = APIRouter(prefix="/setpoints")
+
+
+@setpoints.get("/cool/effective")
+async def read_effective_cool_setpoint(request: Request) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    value = await thermostat.get_effective_cool_setpoint()
+    current = await thermostat.get_effective_cool_setpoint()
 
-    return {"setpoint": value}
+    return SetpointValue(setpoint=current)
 
 
-@api.get("/effective_heat_setpoint")
-async def read_effective_heat_setpoint(request: Request):
+@setpoints.get("/heat/effective")
+async def read_effective_heat_setpoint(request: Request) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    value = await thermostat.get_effective_heat_setpoint()
+    current = await thermostat.get_effective_heat_setpoint()
 
-    return {"setpoint": value}
+    return SetpointValue(setpoint=current)
 
 
-@api.get("/cool_setpoint")
-async def read_cool_setpoint(request: Request, state: OccupancyState):
+@setpoints.get("/cool/{state}")
+async def read_cool_setpoint(request: Request, state: OccupancyState) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    value = await thermostat.get_cool_setpoint(state)
+    current = await thermostat.get_cool_setpoint(state)
 
-    return {"setpoint": value}
+    return SetpointValue(setpoint=current)
 
 
-@api.get("/heat_setpoint")
-async def read_heat_setpoint(request: Request, state: OccupancyState):
+@setpoints.get("/heat/{state}")
+async def read_heat_setpoint(request: Request, state: OccupancyState) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    value = await thermostat.get_heat_setpoint(state)
+    current = await thermostat.get_heat_setpoint(state)
 
-    return {"setpoint": value}
+    return SetpointValue(setpoint=current)
 
 
-@api.put("/cool_setpoint")
-async def write_cool_setpoint(request: Request, state: OccupancyState, value: float):
+@setpoints.put("/cool/{state}")
+async def write_cool_setpoint(
+    request: Request, state: OccupancyState, target: SetpointValue
+) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    await thermostat.set_cool_setpoint(state, value)
+    await thermostat.set_cool_setpoint(state, target.setpoint)
 
-    setpoint = await thermostat.get_cool_setpoint(state)
+    current = await thermostat.get_cool_setpoint(state)
 
-    return {"setpoint": setpoint}
+    return SetpointValue(setpoint=current)
 
 
-@api.put("/heat_setpoint")
-async def write_heat_setpoint(request: Request, state: OccupancyState, value: float):
+@setpoints.put("/heat/{state}")
+async def write_heat_setpoint(
+    request: Request, state: OccupancyState, target: SetpointValue
+) -> SetpointValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    await thermostat.set_heat_setpoint(state, value)
+    await thermostat.set_heat_setpoint(state, target.setpoint)
 
-    setpoint = await thermostat.get_heat_setpoint(state)
+    current = await thermostat.get_heat_setpoint(state)
 
-    return {"setpoint": setpoint}
+    return SetpointValue(setpoint=current)
 
 
 # Occupancy
 @api.get("/occupancy")
-async def read_occupancy(request: Request):
+async def read_occupancy(request: Request) -> OccupancyValue:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
-    occ = await thermostat.get_occupancy_status()
+    current = await thermostat.get_occupancy_status()
 
-    return {"occupancy": occ}
+    return OccupancyValue(occupancy=current)
 
 
 @api.get("/schedule")
@@ -113,9 +128,12 @@ async def read_schedule(request: Request) -> WeeklySchedule:
 
 
 @api.put("/schedule")
-async def write_schedule(request: Request, schedule: WeeklySchedule) -> None:
+async def write_schedule(request: Request, schedule: WeeklySchedule) -> WeeklySchedule:
     thermostat: TC500AThermostat = request.app.state.thermostats["lobby"]
     await thermostat.set_weekly_schedule(schedule)
 
+    return await thermostat.get_weekly_schedule()
 
+
+api.include_router(setpoints)
 app.include_router(api)

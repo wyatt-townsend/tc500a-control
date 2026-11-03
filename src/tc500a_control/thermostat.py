@@ -151,20 +151,15 @@ class TC500AThermostat:
                 for tv in entry.daySchedule
             ]
 
-        return schedule
+        return WeeklySchedule.model_validate(schedule)
 
     async def set_weekly_schedule(self, week: WeeklySchedule) -> None:
-        """Write the weekly program. Needs an entry for every day in Days."""
-        if set(week) != set(Days):
-            raise ValueError(
-                f"weekly schedule needs {', '.join(Days)}, got {list(week)}"
-            )
-
+        """Write the weekly program."""
         await self.app.write_property(
             self.address,
             OCC_SCHEDULE,
             "weekly-schedule",
-            ArrayOf(DailySchedule)([_day(week[name]) for name in Days]),
+            ArrayOf(DailySchedule)([_day(changes) for _, changes in week]),
         )
 
 
