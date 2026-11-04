@@ -12,6 +12,14 @@ from tc500a_control.schema import Days, OccupancyState, Transition, WeeklySchedu
 
 OCC_SCHEDULE = "schedule,2"
 
+SCHEDULE_VALUES = {
+    OccupancyState.OCCUPIED: 0,
+    OccupancyState.UNOCCUPIED: 1,
+    OccupancyState.STANDBY: 3,
+}
+
+SCHEDULE_STATES = {v: k for k, v in SCHEDULE_VALUES.items()}
+
 
 def _day(changes: list[Transition]) -> DailySchedule:
     """Build one day from transitions.
@@ -21,7 +29,10 @@ def _day(changes: list[Transition]) -> DailySchedule:
     """
     return DailySchedule(
         daySchedule=[
-            TimeValue(time=Time(c.time.isoformat()), value=AnyAtomic(Unsigned(c.state)))
+            TimeValue(
+                time=Time(c.time.isoformat()),
+                value=AnyAtomic(Unsigned(SCHEDULE_VALUES[c.state])),
+            )
             for c in changes
         ]
     )  # ty: ignore[invalid-return-type]
@@ -132,7 +143,7 @@ class TC500AThermostat:
 
         value = occ.get_value()
 
-        return OccupancyState(value)
+        return SCHEDULE_STATES[value]
 
     async def get_weekly_schedule(self) -> WeeklySchedule:
         """Return each day's transitions, Monday first."""
@@ -145,7 +156,7 @@ class TC500AThermostat:
             schedule[name] = [
                 Transition(
                     time=datetime.time(*tv.time[:2]),
-                    state=int(tv.value.get_value()),
+                    state=SCHEDULE_STATES[int(tv.value.get_value())],
                 )
                 for tv in entry.daySchedule
             ]

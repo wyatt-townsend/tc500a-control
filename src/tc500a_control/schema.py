@@ -1,5 +1,5 @@
 import datetime
-from enum import IntEnum, StrEnum
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -15,10 +15,10 @@ class Days(StrEnum):
     SUNDAY = "Sun"
 
 
-class OccupancyState(IntEnum):
-    OCCUPIED = 0
-    UNOCCUPIED = 1
-    STANDBY = 3
+class OccupancyState(StrEnum):
+    OCCUPIED = "occupied"
+    UNOCCUPIED = "unoccupied"
+    STANDBY = "standby"
 
 
 class Transition(BaseModel):
@@ -34,7 +34,7 @@ class WeeklySchedule(BaseModel):
     Fields are Monday first, matching the order of the BACnet weekly-schedule array.
     """
 
-    # {"Mon": [{"time": "06:00:00", "state": 0}, ...], ..., "Sun": []}
+    # {"Mon": [{"time": "06:00:00", "state": "occupied"}, ...], ..., "Sun": []}
     model_config = ConfigDict(extra="forbid")
 
     monday: list[Transition] = Field(alias=Days.MONDAY)
