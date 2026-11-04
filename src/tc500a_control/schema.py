@@ -50,6 +50,10 @@ class HealthStatus(BaseModel):
     status: Literal["ok"]
 
 
+class ThermostatList(BaseModel):
+    thermostats: list[str]
+
+
 class TemperatureValue(BaseModel):
     temperature: float
 

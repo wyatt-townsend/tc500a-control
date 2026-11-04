@@ -1,0 +1,6 @@
+# Copy to thermostats.toml. Each id appears in API URLs: lowercase letters, digits, hyphens.
+[thermostats.lobby]
+address = "192.168.0.181"
+
+[thermostats.conference-room]
+address = "192.168.0.182"

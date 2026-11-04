@@ -1,4 +1,10 @@
 def main() -> None:
     import uvicorn
 
-    uvicorn.run("tc500a_control.app:app", host="127.0.0.1", port=8000)
+    from tc500a_control.settings import get_settings
+
+    settings = get_settings()
+
+    uvicorn.run(
+        "tc500a_control.app:app", host=f"{settings.api_host}", port=settings.api_port
+    )

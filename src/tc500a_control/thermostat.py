@@ -1,4 +1,5 @@
 import datetime
+from ipaddress import IPv4Interface
 
 from bacpypes3.basetypes import DailySchedule, TimeValue
 from bacpypes3.constructeddata import AnyAtomic, ArrayOf
@@ -9,8 +10,6 @@ from bacpypes3.primitivedata import Time, Unsigned
 
 from tc500a_control.schema import Days, OccupancyState, Transition, WeeklySchedule
 
-LOCAL_ADDRESS = "192.168.0.2/24"  # this PC's IP + subnet prefix
-THERMOSTAT = Address("192.168.0.181")  # one TC500A
 OCC_SCHEDULE = "schedule,2"
 
 
@@ -163,11 +162,11 @@ class TC500AThermostat:
         )
 
 
-def create_bacnet_client() -> NormalApplication:
+def create_bacnet_client(bind: IPv4Interface) -> NormalApplication:
 
     device = DeviceObject(
         objectIdentifier=("device", 599),  # must be unique on the network
         objectName="tc500a-control",
     )
 
-    return NormalApplication(device, IPv4Address(LOCAL_ADDRESS))
+    return NormalApplication(device, IPv4Address(str(bind)))

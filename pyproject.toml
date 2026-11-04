@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 tc500a-control = "tc500a_control:main"
+tc500a-discover = "tc500a_control.discover:main"
 
 [build-system]
 requires = ["uv_build>=0.12.18,<0.13.0"]
