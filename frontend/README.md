@@ -1,32 +1,28 @@
-# React + TypeScript + Vite
+# TC500A Control Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A simple React frontend for interacting with the TC500A thermostat FastAPI backend.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Updating the API types
+
+`src/api/schema.d.ts` is generated from the backend's OpenAPI schema. Regenerate it whenever the API changes:
+
+1. Export the schema from the repo root. This doesn't start the server or connect to any thermostats.
+
+   ```sh
+   uv run python -c "import json, pathlib; from tc500a_control.app import app; pathlib.Path('frontend/openapi.json').write_text(json.dumps(app.openapi(), indent=2))"
+   ```
+
+2. Generate the types from `frontend/`:
+
+   ```sh
+   npx openapi-typescript@7.13.0 openapi.json -o src/api/schema.d.ts
+   ```
+
+Run the generator with `npx` rather than installing it, because it requires TypeScript 5 and this project uses TypeScript 7.

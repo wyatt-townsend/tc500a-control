@@ -1,0 +1,764 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TC500A Control",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats": {
+      "get": {
+        "summary": "List Thermostats",
+        "operationId": "list_thermostats_api_thermostats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThermostatList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/temperature": {
+      "get": {
+        "summary": "Read Temp",
+        "operationId": "read_temp_api_thermostats__thermostat_id__temperature_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemperatureValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/humidity": {
+      "get": {
+        "summary": "Read Humidity",
+        "operationId": "read_humidity_api_thermostats__thermostat_id__humidity_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumidityValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/occupancy": {
+      "get": {
+        "summary": "Read Occupancy",
+        "operationId": "read_occupancy_api_thermostats__thermostat_id__occupancy_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OccupancyValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/schedule": {
+      "get": {
+        "summary": "Read Schedule",
+        "operationId": "read_schedule_api_thermostats__thermostat_id__schedule_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklySchedule"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write Schedule",
+        "operationId": "write_schedule_api_thermostats__thermostat_id__schedule_put",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeeklySchedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklySchedule"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/setpoints/cool/effective": {
+      "get": {
+        "summary": "Read Effective Cool Setpoint",
+        "operationId": "read_effective_cool_setpoint_api_thermostats__thermostat_id__setpoints_cool_effective_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/setpoints/heat/effective": {
+      "get": {
+        "summary": "Read Effective Heat Setpoint",
+        "operationId": "read_effective_heat_setpoint_api_thermostats__thermostat_id__setpoints_heat_effective_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/setpoints/cool/{state}": {
+      "get": {
+        "summary": "Read Cool Setpoint",
+        "operationId": "read_cool_setpoint_api_thermostats__thermostat_id__setpoints_cool__state__get",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OccupancyState"
+            }
+          },
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write Cool Setpoint",
+        "operationId": "write_cool_setpoint_api_thermostats__thermostat_id__setpoints_cool__state__put",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OccupancyState"
+            }
+          },
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetpointValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/thermostats/{thermostat_id}/setpoints/heat/{state}": {
+      "get": {
+        "summary": "Read Heat Setpoint",
+        "operationId": "read_heat_setpoint_api_thermostats__thermostat_id__setpoints_heat__state__get",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OccupancyState"
+            }
+          },
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write Heat Setpoint",
+        "operationId": "write_heat_setpoint_api_thermostats__thermostat_id__setpoints_heat__state__put",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OccupancyState"
+            }
+          },
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetpointValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetpointValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthStatus": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "HealthStatus"
+      },
+      "HumidityValue": {
+        "properties": {
+          "humidity": {
+            "type": "number",
+            "title": "Humidity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "humidity"
+        ],
+        "title": "HumidityValue"
+      },
+      "OccupancyState": {
+        "type": "string",
+        "enum": [
+          "occupied",
+          "unoccupied",
+          "standby"
+        ],
+        "title": "OccupancyState"
+      },
+      "OccupancyValue": {
+        "properties": {
+          "occupancy": {
+            "$ref": "#/components/schemas/OccupancyState"
+          }
+        },
+        "type": "object",
+        "required": [
+          "occupancy"
+        ],
+        "title": "OccupancyValue"
+      },
+      "SetpointValue": {
+        "properties": {
+          "setpoint": {
+            "type": "number",
+            "maximum": 120.0,
+            "minimum": 40.0,
+            "title": "Setpoint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "setpoint"
+        ],
+        "title": "SetpointValue"
+      },
+      "TemperatureValue": {
+        "properties": {
+          "temperature": {
+            "type": "number",
+            "title": "Temperature"
+          }
+        },
+        "type": "object",
+        "required": [
+          "temperature"
+        ],
+        "title": "TemperatureValue"
+      },
+      "ThermostatList": {
+        "properties": {
+          "thermostats": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Thermostats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "thermostats"
+        ],
+        "title": "ThermostatList"
+      },
+      "Transition": {
+        "properties": {
+          "time": {
+            "type": "string",
+            "format": "time",
+            "title": "Time"
+          },
+          "state": {
+            "$ref": "#/components/schemas/OccupancyState"
+          }
+        },
+        "type": "object",
+        "required": [
+          "time",
+          "state"
+        ],
+        "title": "Transition",
+        "description": "A change point: the state holds until the day's next transition."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WeeklySchedule": {
+        "properties": {
+          "Mon": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Mon"
+          },
+          "Tue": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Tue"
+          },
+          "Wed": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Wed"
+          },
+          "Thu": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Thu"
+          },
+          "Fri": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Fri"
+          },
+          "Sat": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Sat"
+          },
+          "Sun": {
+            "items": {
+              "$ref": "#/components/schemas/Transition"
+            },
+            "type": "array",
+            "title": "Sun"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "title": "WeeklySchedule",
+        "description": "One list of transitions per day. All seven are required; use [] for none.\n\nFields are Monday first, matching the order of the BACnet weekly-schedule array."
+      }
+    }
+  }
+}
