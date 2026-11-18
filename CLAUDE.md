@@ -21,6 +21,9 @@ The user is building this to learn, so the default output is explanation they ca
   - `discover.py`: CLI that finds BACnet devices
 - `frontend/`: React single-page app
   - `src/api/`: generated `schema.d.ts` and the typed API client
+  - `src/components/ui/`: shadcn/ui components, added with `npx shadcn@latest add <name>`
+  - `src/lib/utils.ts`: the `cn()` class-name helper used by shadcn/ui components
+  - `components.json`: shadcn/ui CLI config (style, aliases, CSS file)
 - `docs/`: TC500A BACnet reference material
 - `.env`, `thermostats.toml`: local config, git-ignored, created from the `.example` files. They load relative to the working directory, so start the backend from the repo root.
 
@@ -29,6 +32,6 @@ The user is building this to learn, so the default output is explanation they ca
 Versions live in `pyproject.toml` and `frontend/package.json`.
 
 - **Backend:** Python, uv, FastAPI, Pydantic, pydantic-settings, BACpypes3, Ruff
-- **Frontend:** Node (managed by fnm), Vite, React, TypeScript, oxlint, openapi-fetch
+- **Frontend:** Node (managed by fnm), Vite, React, TypeScript, oxlint, openapi-fetch, Tailwind CSS, shadcn/ui
 
 FastAPI's OpenAPI schema is the contract between the two. When an API route or model changes, regenerate the frontend types by following `frontend/README.md`.
