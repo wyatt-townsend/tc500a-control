@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from './api/client'
-import ThermostatList from './ThermostatList'
+import ThermostatGrid from '@/components/ThermostatGrid'
 
 function App() {
   const [ids, setIds] = useState<string[]>([])
@@ -27,7 +27,7 @@ function App() {
   return (
     <main>
       <h1>Thermostats</h1>
-      {error ? <p>{error}</p> : <ThermostatList ids={ids} />}
+      {error ? <p>{error}</p> : <ThermostatGrid ids={ids} />}
     </main>
   )
 }
