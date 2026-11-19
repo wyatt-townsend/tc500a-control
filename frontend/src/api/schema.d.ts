@@ -72,6 +72,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/thermostats/{thermostat_id}/mode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read System Mode */
+        get: operations["read_system_mode_api_thermostats__thermostat_id__mode_get"];
+        /** Write System Mode */
+        put: operations["write_system_mode_api_thermostats__thermostat_id__mode_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/thermostats/{thermostat_id}/occupancy": {
         parameters: {
             query?: never;
@@ -212,6 +230,15 @@ export interface components {
         SetpointValue: {
             /** Setpoint */
             setpoint: number;
+        };
+        /**
+         * SystemMode
+         * @enum {string}
+         */
+        SystemMode: "auto" | "cool" | "heat" | "emergency-heat" | "off";
+        /** SystemModeValue */
+        SystemModeValue: {
+            mode: components["schemas"]["SystemMode"];
         };
         /** TemperatureValue */
         TemperatureValue: {
@@ -368,6 +395,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HumidityValue"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_system_mode_api_thermostats__thermostat_id__mode_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thermostat_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemModeValue"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    write_system_mode_api_thermostats__thermostat_id__mode_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                thermostat_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SystemModeValue"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemModeValue"];
                 };
             };
             /** @description Validation Error */

@@ -119,6 +119,92 @@
         }
       }
     },
+    "/api/thermostats/{thermostat_id}/mode": {
+      "get": {
+        "summary": "Read System Mode",
+        "operationId": "read_system_mode_api_thermostats__thermostat_id__mode_get",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemModeValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Write System Mode",
+        "operationId": "write_system_mode_api_thermostats__thermostat_id__mode_put",
+        "parameters": [
+          {
+            "name": "thermostat_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thermostat Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemModeValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemModeValue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/thermostats/{thermostat_id}/occupancy": {
       "get": {
         "summary": "Read Occupancy",
@@ -604,6 +690,29 @@
           "setpoint"
         ],
         "title": "SetpointValue"
+      },
+      "SystemMode": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "cool",
+          "heat",
+          "emergency-heat",
+          "off"
+        ],
+        "title": "SystemMode"
+      },
+      "SystemModeValue": {
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/SystemMode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode"
+        ],
+        "title": "SystemModeValue"
       },
       "TemperatureValue": {
         "properties": {

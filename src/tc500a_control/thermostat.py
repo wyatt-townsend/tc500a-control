@@ -8,7 +8,13 @@ from bacpypes3.local.device import DeviceObject
 from bacpypes3.pdu import Address, IPv4Address
 from bacpypes3.primitivedata import Time, Unsigned
 
-from tc500a_control.schema import Days, OccupancyState, Transition, WeeklySchedule
+from tc500a_control.schema import (
+    Days,
+    OccupancyState,
+    SystemMode,
+    Transition,
+    WeeklySchedule,
+)
 
 OCC_SCHEDULE = "schedule,2"
 
@@ -19,6 +25,15 @@ SCHEDULE_VALUES = {
 }
 
 SCHEDULE_STATES = {v: k for k, v in SCHEDULE_VALUES.items()}
+
+SYS_MODE_VALUES = {
+    SystemMode.AUTO: 1,
+    SystemMode.COOL: 2,
+    SystemMode.HEAT: 3,
+    SystemMode.EMERGENCY_HEAT: 4,
+    SystemMode.OFF: 5,
+}
+SYS_MODE_NAMES = {v: k for k, v in SYS_MODE_VALUES.items()}
 
 
 def _day(changes: list[Transition]) -> DailySchedule:
@@ -35,7 +50,7 @@ def _day(changes: list[Transition]) -> DailySchedule:
             )
             for c in changes
         ]
-    )  # ty: ignore[invalid-return-type]
+    )  # ty: ignore[invalid-explicit-return]
 
 
 class TC500AThermostat:
@@ -59,6 +74,19 @@ class TC500AThermostat:
         )
 
         return float(value)
+
+    # Mode
+    async def get_system_mode(self) -> SystemMode:
+        value = await self.app.read_property(
+            self.address, "multi-state-value,8", "present-value"
+        )
+
+        return SYS_MODE_NAMES[int(value)]
+
+    async def set_system_mode(self, mode: SystemMode) -> None:
+        await self.app.write_property(
+            self.address, "multi-state-value,8", "present-value", SYS_MODE_VALUES[mode]
+        )
 
     # Setpoints
     async def get_effective_cool_setpoint(self) -> float:

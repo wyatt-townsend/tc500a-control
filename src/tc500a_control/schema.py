@@ -15,6 +15,14 @@ class Days(StrEnum):
     SUNDAY = "Sun"
 
 
+class SystemMode(StrEnum):
+    AUTO = "auto"
+    COOL = "cool"
+    HEAT = "heat"
+    EMERGENCY_HEAT = "emergency-heat"
+    OFF = "off"
+
+
 class OccupancyState(StrEnum):
     OCCUPIED = "occupied"
     UNOCCUPIED = "unoccupied"
@@ -60,6 +68,10 @@ class TemperatureValue(BaseModel):
 
 class HumidityValue(BaseModel):
     humidity: float
+
+
+class SystemModeValue(BaseModel):
+    mode: SystemMode
 
 
 class SetpointValue(BaseModel):

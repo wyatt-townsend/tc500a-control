@@ -10,6 +10,7 @@ from tc500a_control.schema import (
     OccupancyState,
     OccupancyValue,
     SetpointValue,
+    SystemModeValue,
     TemperatureValue,
     ThermostatList,
     WeeklySchedule,
@@ -77,6 +78,24 @@ async def read_humidity(thermostat: ThermostatDep) -> HumidityValue:
     current = await thermostat.get_humidity()
 
     return HumidityValue(humidity=current)
+
+
+# Mode
+@device.get("/mode")
+async def read_system_mode(thermostat: ThermostatDep) -> SystemModeValue:
+    current = await thermostat.get_system_mode()
+
+    return SystemModeValue(mode=current)
+
+
+@device.put("/mode")
+async def write_system_mode(
+    thermostat: ThermostatDep, target: SystemModeValue
+) -> SystemModeValue:
+    await thermostat.set_system_mode(target.mode)
+    current = await thermostat.get_system_mode()
+
+    return SystemModeValue(mode=current)
 
 
 # Setpoints
