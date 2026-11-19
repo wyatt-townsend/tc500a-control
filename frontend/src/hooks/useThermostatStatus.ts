@@ -5,6 +5,7 @@ import type { components } from '@/api/schema'
 export type ThermostatStatus = {
   temperature: number
   humidity: number
+  mode: components['schemas']['SystemMode']
   heatSetpoint: number
   coolSetpoint: number
   occupancy: components['schemas']['OccupancyState']
@@ -13,21 +14,23 @@ export type ThermostatStatus = {
 async function fetchStatus(id: string): Promise<ThermostatStatus> {
   const options = { params: { path: { thermostat_id: id } } }
 
-  const [temperature, humidity, heat, cool, occupancy] = await Promise.all([
+  const [temperature, humidity, mode, heat, cool, occupancy] = await Promise.all([
     api.GET('/api/thermostats/{thermostat_id}/temperature', options),
     api.GET('/api/thermostats/{thermostat_id}/humidity', options),
+    api.GET('/api/thermostats/{thermostat_id}/mode', options),
     api.GET('/api/thermostats/{thermostat_id}/setpoints/heat/effective', options),
     api.GET('/api/thermostats/{thermostat_id}/setpoints/cool/effective', options),
     api.GET('/api/thermostats/{thermostat_id}/occupancy', options),
   ])
 
-  if (!temperature.data || !humidity.data || !heat.data || !cool.data || !occupancy.data) {
+  if (!temperature.data || !humidity.data || !mode.data || !heat.data || !cool.data || !occupancy.data) {
     throw new Error('Could not read thermostat')
   }
 
   return {
     temperature: temperature.data.temperature,
     humidity: humidity.data.humidity,
+    mode: mode.data.mode,
     heatSetpoint: heat.data.setpoint,
     coolSetpoint: cool.data.setpoint,
     occupancy: occupancy.data.occupancy,
