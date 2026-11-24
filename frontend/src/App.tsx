@@ -26,7 +26,6 @@ function App() {
 
   return (
     <main>
-      <h1>Thermostats</h1>
       {error ? <p>{error}</p> : <ThermostatGrid ids={ids} />}
     </main>
   )
