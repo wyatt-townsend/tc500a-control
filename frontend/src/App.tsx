@@ -1,33 +1,13 @@
-import { useEffect, useState } from 'react'
-import { api } from './api/client'
-import ThermostatGrid from '@/components/ThermostatGrid'
+import { Route, Routes } from 'react-router'
+import ThermostatsPage from '@/pages/ThermostatsPage'
+import SchedulePage from '@/pages/SchedulePage'
 
 function App() {
-  const [ids, setIds] = useState<string[]>([])
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let ignore = false
-
-    api.GET('/api/thermostats').then(({ data, response }) => {
-      if (ignore) return
-
-      if (data) {
-        setIds(data.thermostats)
-      } else {
-        setError(`Request failed with status ${response.status}`)
-      }
-    })
-
-    return () => {
-      ignore = true
-    }
-  }, [])
-
   return (
-    <main>
-      {error ? <p>{error}</p> : <ThermostatGrid ids={ids} />}
-    </main>
+    <Routes>
+      <Route path="/" element={<ThermostatsPage />} />
+      <Route path="/thermostats/:id/schedule" element={<SchedulePage />} />
+    </Routes>
   )
 }
 
